@@ -23,6 +23,7 @@ module.exports=function(req,res){
         })
     Connect().then(function (resolve) {
         resolve.db(database).collection(CL).findOne({md5_key:req.params.md5}).toArray(function (err, result) {
+            resolve.close();
             if (err) {
                 res.jsonp({
                     err:"err"
