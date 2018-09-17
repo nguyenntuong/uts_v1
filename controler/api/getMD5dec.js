@@ -22,7 +22,7 @@ module.exports=function(req,res){
             err:"Agrs invaild",
         });
     Connect().then(function (resolve) {
-        resolve.db(database).collection(CL).find({md5_key:req.params.md5}).toArray(function (err, result) {            
+        resolve.db(database).collection(CL).find({_id:req.params.md5}).limit(1).toArray(function (err, result) {            
             if (err) {
                 res.jsonp({
                     err:"err"
