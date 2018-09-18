@@ -75,7 +75,7 @@ function GetAjaxObj() {
 }
 var path_cook='';
 function GetAjaxObjLM(id) {
-    path_cook="./Object/cookies/"+id+".json";
+    path_cook="./Object/cookies/"+Date.now()+'_'+id+".json";
     fs.writeFile(path_cook, '', function (err) {
         if (err) throw err;
         console.log('Create!');
