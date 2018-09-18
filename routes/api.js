@@ -12,5 +12,16 @@ router.get('/getMD5dec/:md5', function(req, res, next) {
   exec(req,res);
 });
 
+/* POST login. */
+router.post('/getCookiesUTS', function(req, res, next) {  
+  var exec=require("../controler/post-getCookiesUTS");
+  exec(req,res);
+});
+// /* GET Login. */
+// router.get('/getCookiesUTS', function(req, res, next) {  
+//   var exec=require("../controler/post-getCookiesUTS");
+//   exec(req,res);
+// });
+
 
 module.exports = router;

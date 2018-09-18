@@ -4,12 +4,9 @@ var MD5 = require("./MD5.js");
 var FileCookieStore = require('tough-cookie-filestore');
 var Promise = require("promise");
 var request = require("request");
-var controlCK = new FileCookieStore("./Object/Cookie.json");
-var jar = request.jar(controlCK);
-request = request.defaults({
-    jar: jar
-});
-
+var fs = require("fs");
+var controlCK;
+var jar;
 //var _0xa5e2 = ["\x76\x61\x6C", "\x67\x65\x74\x45\x6C\x65\x6D\x65\x6E\x74\x42\x79\x49\x64", "\x65\x38\x34\x61\x64\x36\x36\x30\x63\x34\x37\x32\x31\x61\x65\x30\x65\x38\x34\x61\x64\x36\x36\x30\x63\x34\x37\x32\x31\x61\x65\x30", "\x70\x61\x72\x73\x65", "\x48\x65\x78", "\x65\x6E\x63", "\x55\x74\x66\x38", "\x43\x72\x79\x70\x74\x6F\x67\x72\x61\x70\x68\x79\x50\x4D\x54\x2D\x45\x4D\x53", "\x43\x42\x43", "\x6D\x6F\x64\x65", "\x50\x6B\x63\x73\x37", "\x70\x61\x64", "\x65\x6E\x63\x72\x79\x70\x74", "\x41\x45\x53", "\x76\x61\x6C\x75\x65", "\x63\x69\x70\x68\x65\x72\x74\x65\x78\x74", ""];
 
 //var _0xa5e2 = ["val", "getElementById", "e84ad660c4721ae0e84ad660c4721ae0", "parse", "Hex", "enc", "Utf8", "CryptographyPMT-EMS", "CBC", "mode", "Pkcs7", "pad", "encrypt", "AES", "value", "ciphertext", ""];
@@ -21,22 +18,17 @@ function EncryptData(id, pass) {
         try {
             var _0xd2e2x5 = CryptoJS.enc.Hex.parse("e84ad660c4721ae0e84ad660c4721ae0");
             GetPrivateKey(_0xd2e2x4).then(function (resolve_local) {
-                console.log("resolve_local", resolve_local);
                 var _0xd2e2x6 = CryptoJS.enc.Utf8.parse(resolve_local); /// Lấy chuổi salt
-                console.log("CryptoJS.enc.Utf8.parse", _0xd2e2x6);
                 var _0xd2e2x7 = CryptoJS.enc.Utf8.parse("CryptographyPMT-EMS");
-                console.log("CryptoJS.enc.Utf8.parse", _0xd2e2x7);
                 var _0xd2e2x8 = PBKDF2.PBKDF2(_0xd2e2x6.toString(CryptoJS.enc.Utf8), _0xd2e2x7, {
                     keySize: 128 / 32,
                     iterations: 1000
                 });
-                console.log("PBKDF2", _0xd2e2x8);
                 var _0xd2e2x9 = CryptoJS.AES.encrypt(_0xd2e2x2, _0xd2e2x8, {
                     mode: CryptoJS.mode.CBC,
                     iv: _0xd2e2x5,
                     padding: CryptoJS.pad.Pkcs7
                 });
-                console.log("CryptoJS.AES.encrypt", _0xd2e2x9);
                 resolve({
                     hash: _0xd2e2x9.ciphertext.toString(CryptoJS.enc.Base64)
                 }); // Lấy ra Passowrd đã dược hash
@@ -49,9 +41,6 @@ function EncryptData(id, pass) {
         };
     });
 }
-
-
-
 
 
 //https://sv.ut.edu.vn/ajaxpro/AjaxCommon,PMT.Web.PhongDaoTao.ashx
@@ -84,9 +73,19 @@ function GetAjaxObj() {
     };
     return AjaxCommon;
 }
-
-function GetAjaxObjLM() {
-    controlCK.removeCookies("sv.ut.edu.vn", "/", function () {});
+var path_cook='';
+function GetAjaxObjLM(id) {
+    path_cook="./Object/cookies/"+id+".json";
+    fs.writeFile(path_cook, '', function (err) {
+        if (err) throw err;
+        console.log('Create!');
+    });
+    //fs.openSync("../Object/cookies/"+id+".json",'a');
+    controlCK = new FileCookieStore(path_cook);
+    jar = request.jar(controlCK);
+    request = request.defaults({
+        jar: jar
+    });
     var AjaxCommonLM = {
         CreateConfirmImage: function () {
             return new Promise(function (resolve, reject) {
@@ -123,52 +122,61 @@ function GetPrivateKey(_0xd2e2xc) {
     });
 }
 
-function makeRD(md5) {
-    var text = "";
-    var flag = [0, 0, 0, 0];
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    while (1) {
-        if (flag[3] == possible.length) {
-            flag[3] = 0;
-            flag[2]++;
-            if (flag[2] == possible.length) {
-                flag[2] = 0;
-                flag[1]++;
-                if (flag[1] == possible.length) {
-                    flag[1] = 0;
-                    flag[0]++;
-                    if (flag[0] == possible.length) {
-                        return false;
-                    }
-                } 
-            } 
-        } 
-        text = possible[flag[0]] + possible[flag[1]] + possible[flag[2]] + possible[flag[3]++];
-        console.log(text);
-        if (MD5(text) == md5) {
-            return text;
-        }
-    }
-}
-//
 //"Cookie":controlCK.findCookie('sv.ut.edu.vn','/','key')+'='+controlCK.findCookie('sv.ut.edu.vn','/','value')
 
 function POSTLogin(data) {
+    console.log(data);   
+    return new Promise(function (resolve, reject) {
+        var options = {
+            method: 'POST',
+            url: 'https://sv.ut.edu.vn/',
+            headers: {
+                'Postman-Token': '2454c8db-1d3a-4677-9290-a25f4abbdb6b',
+                'Cache-Control': 'no-cache',
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0'
+            },
+            form: data
+        };
+        request(options, function (err, res, body) {
+            if (err) {
+                console.log(err);
+                reject(err);
+            } else {
+                console.log(res.headers);
+                if(typeof(res.headers.location)=='undefined')
+                {
+                    resolve({success:false});
+                }
+                else
+                {
+                    let value = JSON.parse(fs.readFileSync(path_cook));
+                    fs.unlinkSync(path_cook);
+                    resolve({success:true,value:value});
+                }
+                
+            }
+        });
+    });
+}
+
+function GETmd5DEC(id) {
     return new Promise(function (resolve, reject) {
         request({
-            url: "https://sv.ut.edu.vn/Default.aspx",
-            method: "POST",
+            url: "https://uts.ntuongst.ga/api/getMD5dec/" + id,
+            method: "GET",
             headers: {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0",
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            json: true,
-            body: data
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0"
+            }
         }, function (err, res, body) {
             if (err) {
                 reject(err);
             } else {
-                resolve(body.toString())
+                console.log(body);
+                if (body == '')
+                    resolve("");
+                else
+                    resolve(JSON.parse(body))
             }
         });
     });
@@ -176,5 +184,5 @@ function POSTLogin(data) {
 module.exports.GetAjaxObj = GetAjaxObj;
 module.exports.GetAjaxObjLM = GetAjaxObjLM;
 module.exports.EncryptData = EncryptData;
-module.exports.makeRD = makeRD;
 module.exports.POSTLogin = POSTLogin;
+module.exports.GETmd5DEC = GETmd5DEC;
