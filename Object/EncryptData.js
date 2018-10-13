@@ -163,4 +163,3 @@ module.exports.GetAjaxObj = GetAjaxObj;
 module.exports.GetAjaxObjLM = GetAjaxObjLM;
 module.exports.EncryptData = EncryptData;
 module.exports.POSTLogin = POSTLogin;
-module.exports.GETmd5DEC = require("../models/mongo-models").FindMD5;

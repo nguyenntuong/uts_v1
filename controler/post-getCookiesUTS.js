@@ -1,7 +1,7 @@
 var EncryptData = require("../Object/EncryptData").EncryptData;
 var LoadIMG = require("../Object/EncryptData").GetAjaxObjLM;
 var POSTLogin = require("../Object/EncryptData").POSTLogin;
-var GETmd5 = require("../Object/EncryptData").GETmd5DEC;
+var GETmd5 = require("../models/mongo-models").FindMD5;
 var MD5 = require("../Object/MD5.js");
 var FileCookieStore = require('tough-cookie-filestore');
 module.exports = function (req, res) {
