@@ -1,6 +1,5 @@
 var CryptoJS = require("./aes.js");
 var PBKDF2 = require("./pbkdf2.js");
-var MD5 = require("./MD5.js");
 var FileCookieStore = require('tough-cookie-filestore');
 var Promise = require("promise");
 var request = require("request");
@@ -160,29 +159,8 @@ function POSTLogin(data) {
     });
 }
 
-function GETmd5DEC(id) {
-    return new Promise(function (resolve, reject) {
-        request({
-            url: "https://uts.ntuongst.ga/api/getMD5dec/" + id,
-            method: "GET",
-            headers: {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0"
-            }
-        }, function (err, res, body) {
-            if (err) {
-                reject(err);
-            } else {
-                console.log(body);
-                if (body == '')
-                    resolve("");
-                else
-                    resolve(JSON.parse(body))
-            }
-        });
-    });
-}
 module.exports.GetAjaxObj = GetAjaxObj;
 module.exports.GetAjaxObjLM = GetAjaxObjLM;
 module.exports.EncryptData = EncryptData;
 module.exports.POSTLogin = POSTLogin;
-module.exports.GETmd5DEC = GETmd5DEC;
+module.exports.GETmd5DEC = require("../models/mongo-models").FindMD5;

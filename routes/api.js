@@ -17,11 +17,6 @@ router.post('/getCookiesUTS', function(req, res, next) {
   var exec=require("../controler/post-getCookiesUTS");
   exec(req,res);
 });
-// /* GET Login. */
-// router.get('/getCookiesUTS', function(req, res, next) {  
-//   var exec=require("../controler/post-getCookiesUTS");
-//   exec(req,res);
-// });
 
 
 module.exports = router;
