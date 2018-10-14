@@ -124,7 +124,6 @@ function GetPrivateKey(_0xd2e2xc) {
 //"Cookie":controlCK.findCookie('sv.ut.edu.vn','/','key')+'='+controlCK.findCookie('sv.ut.edu.vn','/','value')
 
 function POSTLogin(data) {
-    console.log(data);   
     return new Promise(function (resolve, reject) {
         var options = {
             method: 'POST',
@@ -142,7 +141,6 @@ function POSTLogin(data) {
                 console.log(err);
                 reject(err);
             } else {
-                console.log(res.headers);
                 if(typeof(res.headers.location)=='undefined')
                 {
                     resolve({success:false});
@@ -153,7 +151,6 @@ function POSTLogin(data) {
                     fs.unlinkSync(path_cook);
                     resolve({success:true,value:value});
                 }
-                
             }
         });
     });

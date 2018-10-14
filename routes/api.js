@@ -7,7 +7,6 @@ router.get('/', function(req, res, next) {
 });
 /* GET home page. */
 router.get('/getMD5dec/:md5', function(req, res, next) {  
-  
   var exec=require("../controler/api/getMD5dec");
   exec(req,res);
 });

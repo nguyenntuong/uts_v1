@@ -5,7 +5,7 @@ var GETmd5 = require("../models/mongo-models").FindMD5;
 var MD5 = require("../Object/MD5.js");
 var FileCookieStore = require('tough-cookie-filestore');
 module.exports = function (req, res) {
-    console.log(req.body);
+    console.log(req.body.id);
     var id = req.body.id;
     var pass = req.body.passwd;
 
