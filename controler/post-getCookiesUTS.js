@@ -12,7 +12,6 @@ module.exports = function (req, res) {
     LoadIMG(id).CreateConfirmImage().then(function (resolve) {
         EncryptData(id, pass).then(function (resolve_local) {
             GETmd5(resolve[1]).then(function (resl) {
-                console.log("GETMD5", resl);
                 let dataP = {
                     "__EVENTTARGET": "",
                     "__EVENTARGUMENT": "",
@@ -29,10 +28,8 @@ module.exports = function (req, res) {
                     "ctl00$ucRight1$btnLogin": "ÄÄng Nháº­p"
                 };
                 POSTLogin(dataP).then(function (resolve_xxx) {
-                    console.log(resolve_xxx);
                     res.jsonp(resolve_xxx);
                 }, function (reject) {
-                    console.log(reject);
                     res.jsonp({
                         success: false,
                         err: reject

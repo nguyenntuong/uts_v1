@@ -12,6 +12,7 @@ var jar;
 function EncryptData(id, pass) {
     console.log("EncryptData", "Called");
     return new Promise(function (resolve, reject) {
+        let now = Date.now();
         var _0xd2e2x2 = pass;
         var _0xd2e2x4 = id; // Lấy ra giá trị mã sinh viên để tạo salt
         try {
@@ -28,6 +29,7 @@ function EncryptData(id, pass) {
                     iv: _0xd2e2x5,
                     padding: CryptoJS.pad.Pkcs7
                 });
+                console.log('EncryptData',Date.now()-now,'ms');
                 resolve({
                     hash: _0xd2e2x9.ciphertext.toString(CryptoJS.enc.Base64)
                 }); // Lấy ra Passowrd đã dược hash
@@ -79,7 +81,6 @@ function GetAjaxObjLM(id) {
         if (err) throw err;
         console.log('Create!');
     });
-    //fs.openSync("../Object/cookies/"+id+".json",'a');
     controlCK = new FileCookieStore(path_cook);
     jar = request.jar(controlCK);
     request = request.defaults({
@@ -88,6 +89,7 @@ function GetAjaxObjLM(id) {
     var AjaxCommonLM = {
         CreateConfirmImage: function () {
             return new Promise(function (resolve, reject) {
+                let now = Date.now();
                 request({
                     url: "https://sv.ut.edu.vn/ajaxpro/AjaxConfirmImage,PMT.Web.PhongDaoTao.ashx",
                     method: "POST",
@@ -104,7 +106,8 @@ function GetAjaxObjLM(id) {
                     } else {
                         var str = body.replace(";/*", '').replace("[", '').replace("]", '').replace(/"/ig, '');
                         var arr = str.split(',');
-                        resolve(arr)
+                        console.log('CreateConfirmImage ',Date.now()-now,'ms');
+                        resolve(arr);
                     }
                 });
             });
@@ -125,6 +128,7 @@ function GetPrivateKey(_0xd2e2xc) {
 
 function POSTLogin(data) {
     return new Promise(function (resolve, reject) {
+        let now = Date.now();
         var options = {
             method: 'POST',
             url: 'https://sv.ut.edu.vn/',
@@ -149,6 +153,7 @@ function POSTLogin(data) {
                 {
                     let value = JSON.parse(fs.readFileSync(path_cook));
                     fs.unlinkSync(path_cook);
+                    console.log('POSTLogin',Date.now()-now,'ms');
                     resolve({success:true,value:value});
                 }
             }

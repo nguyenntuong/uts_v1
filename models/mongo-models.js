@@ -16,6 +16,7 @@ function Connect() {
 module.exports={
     FindMD5:function(md5){
         return new Promise(function(resolve1,reject1){
+            let now = Date.now();
             Connect().then(function(resolve){
                 resolve
                 .db(database)
@@ -30,6 +31,7 @@ module.exports={
                             err: "err"
                         });
                     } else {
+                        console.log('FindMD5',Date.now()-now,'ms');
                         resolve1(result[0]);
                     }
                     resolve.close();
