@@ -17,7 +17,7 @@ function EncryptData(id, pass) {
         var _0xd2e2x4 = id; // Lấy ra giá trị mã sinh viên để tạo salt
         try {
             var _0xd2e2x5 = CryptoJS.enc.Hex.parse("e84ad660c4721ae0e84ad660c4721ae0");
-            GetPrivateKey(_0xd2e2x4).then(function (resolve_local) {
+            GetAjaxObj().GetPrivateKey(_0xd2e2xc).then(function (resolve_local) {
                 var _0xd2e2x6 = CryptoJS.enc.Utf8.parse(resolve_local); /// Lấy chuổi salt
                 var _0xd2e2x7 = CryptoJS.enc.Utf8.parse("CryptographyPMT-EMS");
                 var _0xd2e2x8 = PBKDF2.PBKDF2(_0xd2e2x6.toString(CryptoJS.enc.Utf8), _0xd2e2x7, {
@@ -49,6 +49,7 @@ function GetAjaxObj() {
     var AjaxCommon = {
         GetPrivateKey: function (salt) {
             return new Promise(function (resolve, reject) {
+                let now = Date.now();
                 request({
                     url: "https://sv.ut.edu.vn/ajaxpro/AjaxCommon,PMT.Web.PhongDaoTao.ashx",
                     method: "POST",
@@ -66,6 +67,7 @@ function GetAjaxObj() {
                         reject(err);
                     } else {
                         var str = body.replace(";/*", '').replace(/"/ig, '');
+                        console.log('GetPrivateKey',Date.now()-now,'ms');
                         resolve(str)
                     }
                 });
@@ -114,14 +116,6 @@ function GetAjaxObjLM(id) {
         }
     };
     return AjaxCommonLM;
-}
-
-function GetPrivateKey(_0xd2e2xc) {
-    return new Promise(function (resolve, reject) {
-        GetAjaxObj().GetPrivateKey(_0xd2e2xc).then(function (resolve_local) {
-            resolve(resolve_local);
-        });
-    });
 }
 
 //"Cookie":controlCK.findCookie('sv.ut.edu.vn','/','key')+'='+controlCK.findCookie('sv.ut.edu.vn','/','value')
